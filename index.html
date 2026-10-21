@@ -31,7 +31,7 @@
                     },
                     colors: {
                         gold: '#eab308', 
-                        darkbg: '#050b14', // Deep dark navy/green mix
+                        darkbg: '#050b14',
                         cardbg: 'rgba(10, 25, 35, 0.45)',
                     }
                 }
@@ -52,6 +52,48 @@
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
             position: relative;
+        }
+
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #050b14;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+            background-image: radial-gradient(circle at center, #0a1f2e 0%, #050b14 100%);
+        }
+        .splash-logo {
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            border: 3px solid #eab308;
+            box-shadow: 0 0 30px rgba(234, 179, 8, 0.6);
+            animation: splash-pulse 2s infinite alternate;
+            object-fit: cover;
+        }
+        @keyframes splash-pulse {
+            0% { transform: scale(0.95) perspective(500px) rotateY(-10deg); box-shadow: 0 0 20px rgba(234, 179, 8, 0.3); }
+            100% { transform: scale(1.05) perspective(500px) rotateY(10deg); box-shadow: 0 0 60px rgba(234, 179, 8, 0.8); }
+        }
+        .splash-title {
+            font-family: 'Amiri', serif;
+            font-size: 3.5rem;
+            color: #eab308;
+            text-shadow: 0 0 20px rgba(234, 179, 8, 0.6);
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+        .splash-spinner {
+            width: 40px; height: 40px;
+            border: 4px solid rgba(234, 179, 8, 0.2);
+            border-top-color: #eab308;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
         /* 3D Ambient Floating Orbs */
@@ -82,7 +124,7 @@
         /* 3D Glassmorphism Card */
         .glass-card {
             background: var(--cardbg);
-            border: 1px solid rgba(234, 179, 8, 0.15); /* Subtle gold border */
+            border: 1px solid rgba(234, 179, 8, 0.15);
             border-radius: 1.25rem;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
@@ -170,6 +212,13 @@
 </head>
 <body class="antialiased font-sans">
 
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen">
+        <img src="nor.jpeg" onerror="this.src='https://placehold.co/140x140/eab308/000?text=N'" alt="نور الإيمان" class="splash-logo">
+        <h1 class="splash-title">نور الإيمان</h1>
+        <div class="splash-spinner"></div>
+    </div>
+
     <!-- 3D Ambient Background -->
     <div class="ambient-bg">
         <div class="orb orb-1"></div>
@@ -237,7 +286,7 @@
                 
                 <!-- Resume Bookmark Button -->
                 <div id="resume-bookmark-container" class="hidden mb-8">
-                    <button onclick="resumeBookmark()" class="w-full glass-card glow-border p-5 text-gold font-bold text-center flex items-center justify-center gap-3 active:scale-95 transition-all bg-gold/5">
+                    <button onclick="resumeBookmark()" class="w-full glass-card glow-border p-5 text-gold font-bold text-center flex items-center justify-center gap-3 active:scale-95 transition-all bg-gold/5 hover:bg-gold/10">
                         <i class="fa-solid fa-location-dot text-xl animate-bounce"></i> <span id="resume-text" class="text-lg">بەردەوام بە ژ جهێ تە هێلای</span>
                     </button>
                 </div>
@@ -292,7 +341,23 @@
     <audio id="quran-audio" preload="none"></audio>
 
     <script>
-        // --- 3D TILT EFFECT (For Non-Touch Devices mostly, but safe for all) ---
+        // --- SPLASH SCREEN LOGIC ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    splash.style.visibility = 'hidden';
+                }
+            }, 3000); // 3 seconds delay for splash screen
+
+            renderZikr();
+            renderDuas();
+            loadSurahs();
+            setTimeout(initTilt, 500);
+        });
+
+        // --- 3D TILT EFFECT (For Non-Touch Devices) ---
         function initTilt() {
             const cards = document.querySelectorAll('.tilt-effect');
             cards.forEach(card => {
@@ -335,7 +400,7 @@
             toggleSidebar();
             if(sectionId !== 'quran') stopAudio();
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(initTilt, 100); // Re-init tilt for new elements
+            setTimeout(initTilt, 100); 
         }
 
         // --- UTILS ---
@@ -386,7 +451,7 @@
                 const curr = counts[z.id] || 0;
                 container.innerHTML += `
                     <div class="glass-card tilt-effect p-8 flex flex-col items-center relative">
-                        <h3 class="font-quran text-4xl text-white mb-10 glow-text">${z.text}</h3>
+                        <h3 class="font-quran text-4xl text-white mb-10 glow-text text-center leading-normal">${z.text}</h3>
                         <button onclick="incrementZikr('${z.id}', ${z.target})" class="counter-circle mb-6 group">
                             <span class="text-6xl font-black text-gold group-active:scale-110 transition-transform">${curr}</span>
                             <span class="text-sm text-gray-300 mt-2 font-bold">ژ ${z.target}</span>
@@ -433,7 +498,7 @@
             });
         }
 
-        // --- QURAN LOGIC (Optimized to prevent Mobile Crash) ---
+        // --- QURAN LOGIC ---
         let quranData = [];
         let currentAyahs = [];
         let playingIndex = -1;
@@ -483,12 +548,10 @@
             stopAudio();
 
             try {
-                // Fetch text and audio links in one lightweight request
                 const res = await fetch(`https://api.alquran.cloud/v1/surah/${number}/ar.alafasy`);
                 const data = await res.json();
                 if (data.code === 200) {
                     currentAyahs = data.data.ayahs;
-                    // Render via string building is fast
                     renderSurahText(number, name, scrollToAyah);
                 }
             } catch (e) {
@@ -504,7 +567,6 @@
 
             const bm = JSON.parse(localStorage.getItem('quran_bookmark'));
 
-            // Using array join is highly efficient and prevents UI block
             const ayahsHtml = currentAyahs.map((ayah, i) => {
                 const isBookmarked = (bm && bm.surahNum === surahNum && bm.index === i);
                 return `
@@ -521,7 +583,6 @@
             document.getElementById('surah-content').innerHTML = html;
             window.scrollTo(0, 0);
 
-            // Auto-scroll to bookmark if needed
             if (scrollToAyah !== null) {
                 setTimeout(() => {
                     const el = document.getElementById(`ayah-${scrollToAyah}`);
@@ -541,7 +602,6 @@
             window.scrollTo(0, 0);
         }
 
-        // --- AUDIO PLAYER & AUTO SCROLL ---
         function togglePlay() {
             if (!currentAyahs.length) return;
             if (!audioPlayer.paused) {
@@ -563,23 +623,17 @@
                 stopAudio();
                 return;
             }
-
             playingIndex = index;
-            
-            // Remove previous highlights
             document.querySelectorAll('span[id^="ayah-"]').forEach(el => el.classList.remove('ayah-playing'));
             
-            // Add new highlight and scroll
             const currentEl = document.getElementById(`ayah-${index}`);
             if (currentEl) {
                 currentEl.classList.add('ayah-playing');
-                // Calculate scroll position nicely
                 const yOffset = -150; 
                 const y = currentEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
                 window.scrollTo({top: y, behavior: 'smooth'});
             }
 
-            // Play specific ayah audio link
             audioPlayer.src = currentAyahs[index].audio;
             audioPlayer.load();
             
@@ -587,10 +641,7 @@
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     updateUIState(true);
-                }).catch(err => {
-                    // Autoplay prevented or error, stop UI playing state
-                    updateUIState(false);
-                });
+                }).catch(err => updateUIState(false));
             }
         }
 
@@ -613,7 +664,7 @@
         }
 
         audioPlayer.addEventListener('ended', () => {
-            playAyahObj(playingIndex + 1); // Play next automatically
+            playAyahObj(playingIndex + 1);
         });
 
         // --- BOOKMARK LOGIC ---
@@ -622,14 +673,12 @@
             const data = { surahNum, surahName, index };
             localStorage.setItem('quran_bookmark', JSON.stringify(data));
             
-            // Reset all icons
             document.querySelectorAll('.fa-thumbtack').forEach(icon => {
                 icon.parentElement.classList.remove('text-gold', 'drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]', 'scale-110');
                 icon.parentElement.classList.add('text-gray-600');
                 icon.classList.add('-rotate-45');
             });
             
-            // Highlight clicked icon
             const clickedBtn = e.currentTarget;
             clickedBtn.classList.remove('text-gray-600');
             clickedBtn.classList.add('text-gold', 'drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]', 'scale-110');
@@ -651,14 +700,6 @@
             const bm = JSON.parse(localStorage.getItem('quran_bookmark'));
             if (bm) fetchSurah(bm.surahNum, bm.surahName, bm.index);
         }
-
-        // --- INIT ---
-        window.onload = () => {
-            renderZikr();
-            renderDuas();
-            loadSurahs();
-            setTimeout(initTilt, 500);
-        };
     </script>
 </body>
 </html>
