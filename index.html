@@ -71,12 +71,11 @@
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
         
-        /* CSS Trick to perfectly crop the white background of the JPEG logo */
         .splash-logo-container {
             width: 220px;
             height: 220px;
             border-radius: 50%;
-            overflow: hidden; /* This hides the white edges */
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -86,7 +85,7 @@
             animation: floatLogo 3s ease-in-out infinite;
         }
         .splash-logo {
-            width: 125%; /* Scales the image to push the white border out of view */
+            width: 125%;
             height: 125%;
             object-fit: cover;
             border-radius: 50%;
@@ -133,7 +132,6 @@
             border: 1px solid rgba(255,255,255,0.02);
         }
         
-        /* Cropped Header Logo */
         .header-logo-container {
             width: 55px;
             height: 55px;
@@ -146,7 +144,7 @@
             border: 2px solid var(--accent);
         }
         .site-logo {
-            width: 125%; /* Cuts off the white */
+            width: 125%;
             height: 125%;
             object-fit: cover;
         }
@@ -183,12 +181,11 @@
             padding: 30px 25px;
             margin-bottom: 25px;
             box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light);
-            border: 1px solid rgba(232, 200, 149, 0.05); /* Subtle gold border */
+            border: 1px solid rgba(232, 200, 149, 0.05); 
             transition: 0.3s ease;
             position: relative;
             overflow: hidden;
         }
-        /* Card reflection effect */
         .neu-card::before {
             content: '';
             position: absolute;
@@ -337,7 +334,7 @@
             box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
         }
 
-        /* Ayah Design - Deep Inset Shadow for 3D Carved effect */
+        /* Ayah Design */
         .ayah {
             font-family: 'Amiri', serif;
             font-size: 2.4rem;
@@ -526,7 +523,8 @@
             <h2 class="section-title"><span>فێرکرنا نڤێژێ</span></h2>
             <div class="neu-card">
                 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 15px;">
-                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" src="https://www.youtube.com/embed/73nsf5jupHo?si=H-QKUT6bDDLXJ0LM" allowfullscreen></iframe>
+                    <!-- Updated YouTube Link as requested -->
+                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" src="https://www.youtube.com/embed/73nsf5jupHo?si=3QwXANFxLTctAKqX" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
             </div>
         </main>
@@ -636,7 +634,7 @@
         function resetZikr(id) { document.getElementById(`count-${id}`).innerText = '0'; }
         renderAzkar();
 
-        // Dua (Arabic Only - Super Deep Inset Shadow 3D)
+        // Dua 
         const duas = [
             { arabic: "بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي وبِكَ أَرْفَعُهُ..." },
             { arabic: "اللَّهُمَّ إِنَّكَ خَلَقْتَ نَفْسِي وَأَنْتَ تَوَفَّاهَا..." },
