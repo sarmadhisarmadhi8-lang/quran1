@@ -1,11 +1,11 @@
-
+<!DOCTYPE html>
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>نور الإيمان</title>
     
-    <!-- Security & API Meta Tags (Fixed Audio Source) -->
+    <!-- Security & API Meta Tags -->
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="no-referrer">
@@ -26,11 +26,11 @@
     <link rel="icon" type="image/jpeg" href="nor.jpeg">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Added Aref Ruqaa font for a beautiful Islamic Calligraphy look -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Neumorphism Colors */
             --bg-color: #121818;
             --shadow-light: #1a2222;
             --shadow-dark: #0a0e0e;
@@ -54,7 +54,6 @@
             overflow-x: hidden;
         }
 
-        /* Fixed Splash Screen Layout */
         #splash-screen {
             position: fixed;
             inset: 0; 
@@ -77,10 +76,10 @@
         }
         .splash-title {
             margin-top: 30px;
-            font-family: 'Amiri', serif;
-            font-size: 2.8rem;
+            font-family: 'Aref Ruqaa', serif;
+            font-size: 3.5rem;
             color: var(--accent);
-            text-shadow: 2px 2px 4px var(--shadow-dark);
+            text-shadow: 2px 2px 6px var(--shadow-dark), 0 0 15px var(--accent-glow);
         }
 
         @keyframes pulse {
@@ -94,7 +93,6 @@
             padding: 20px;
         }
 
-        /* Neumorphism 3D Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -115,10 +113,15 @@
             object-fit: cover;
             border: 2px solid var(--accent);
         }
-        .logo-text { font-size: 1.6rem; color: var(--accent); font-weight: 700; }
+        .logo-text { 
+            font-family: 'Aref Ruqaa', serif; 
+            font-size: 2rem; 
+            color: var(--accent); 
+            font-weight: 700; 
+            text-shadow: 2px 2px 4px var(--shadow-dark); 
+        }
         .menu-btn { background: none; border: none; color: var(--accent); font-size: 1.6rem; cursor: pointer; }
 
-        /* Section Titles */
         .section-title {
             text-align: center;
             font-size: 2.4rem;
@@ -131,7 +134,6 @@
             padding-bottom: 5px;
         }
 
-        /* 3D Neumorphism Cards */
         .neu-card {
             background-color: var(--bg-color);
             border-radius: 25px;
@@ -141,7 +143,6 @@
             transition: 0.3s ease;
         }
 
-        /* 3D Circular Counter Button */
         .counter-btn {
             width: 150px;
             height: 150px;
@@ -183,7 +184,19 @@
             box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
         }
 
-        /* Dua 3D Button */
+        .dua-text-3d {
+            font-family: 'Amiri', serif; 
+            font-size: 2rem; 
+            text-align: center; 
+            margin-bottom: 25px; 
+            line-height: 1.9;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: var(--bg-color);
+            box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+            color: var(--accent);
+        }
+
         .dua-action-btn {
             width: 100%;
             padding: 18px;
@@ -195,7 +208,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 20px;
+            margin-top: 10px;
             box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
         }
         .dua-action-btn:active {
@@ -206,7 +219,6 @@
             box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
         }
 
-        /* Quran Search */
         .search-box {
             width: 100%;
             padding: 18px 25px;
@@ -270,7 +282,6 @@
             box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
         }
 
-        /* Ayah Design */
         .ayah {
             font-family: 'Amiri', serif;
             font-size: 2.2rem;
@@ -298,7 +309,6 @@
         }
         .bookmark-btn.active { color: var(--accent); text-shadow: 0 0 15px var(--accent); transform: scale(1.2); }
 
-        /* Audio Player 3D */
         .audio-player-fixed {
             background-color: var(--bg-color);
             border-radius: 20px;
@@ -330,7 +340,6 @@
         }
         .play-btn:active { box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light); }
 
-        /* Sidebar Menu 3D */
         .side-menu {
             position: fixed;
             top: 0;
@@ -345,7 +354,6 @@
         }
         .side-menu.active { right: 0; }
         
-        /* Fixed Menu Items using DIV */
         .menu-item {
             padding: 18px;
             border-radius: 15px;
@@ -391,14 +399,12 @@
     </style>
 </head>
 <body>
-    <!-- Splash Screen -->
     <div id="splash-screen">
         <img src="nor.jpeg" alt="نور الإيمان" class="splash-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' fill=\'%23D6BD98\'/><text x=\'50\' y=\'65\' font-size=\'50\' text-anchor=\'middle\' fill=\'%23121818\'>N</text></svg>'">
         <h1 class="splash-title">نور الإيمان</h1>
     </div>
 
     <div class="app-container">
-        <!-- 3D Header -->
         <header class="header">
             <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
             <div style="display:flex; align-items:center; gap:12px;">
@@ -407,13 +413,11 @@
             </div>
         </header>
 
-        <!-- Zikr Section -->
         <main id="zikr-section" class="section active">
             <h2 class="section-title"><span>زکرێ رۆژانە</span></h2>
             <div id="zikr-container"></div>
         </main>
 
-        <!-- Quran List Section -->
         <main id="quran-list-section" class="section">
             <h2 class="section-title"><span>قورئانا پیرۆز</span></h2>
             <p style="text-align: center; color: var(--text-light); margin-bottom: 25px; opacity: 0.8;">١١٤ سورەت - دەنگێ مشاري العفاسي</p>
@@ -424,7 +428,6 @@
             <div id="surahs-container"></div>
         </main>
 
-        <!-- Quran Reader Section -->
         <main id="quran-reader-section" class="section">
             <div class="top-bar">
                 <button class="back-btn" onclick="showSection('quran-list-section')"><i class="fas fa-arrow-right"></i></button>
@@ -448,7 +451,6 @@
             <div id="ayahs-container" class="neu-card" style="padding: 15px;"></div>
         </main>
 
-        <!-- Prayer Section -->
         <main id="prayer-section" class="section">
             <h2 class="section-title"><span>فێرکرنا نڤێژێ</span></h2>
             <div class="neu-card">
@@ -458,18 +460,18 @@
             </div>
         </main>
 
-        <!-- Dua Section -->
         <main id="dua-section" class="section">
             <h2 class="section-title"><span>دوعایێن خەوێ و رۆژانە</span></h2>
             <div id="dua-container"></div>
         </main>
     </div>
 
-    <!-- Sidebar Menu -->
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     <nav class="side-menu" id="side-menu">
         <button onclick="toggleMenu()" style="color:var(--text-light); font-size:1.8rem; background:none; border:none; cursor:pointer;"><i class="fas fa-times"></i></button>
-        <h3 style="color: var(--accent); text-align: center; margin-top: 10px; font-size: 2rem; margin-bottom: 40px;">پێڕست</h3>
+        
+        <!-- گۆهۆڕینا پێڕست بۆ نور الإيمان ب فۆنتێ نایاب یێ Aref Ruqaa -->
+        <h3 style="color: var(--accent); text-align: center; margin-top: 10px; font-size: 3rem; font-family: 'Aref Ruqaa', serif; margin-bottom: 40px; text-shadow: 4px 4px 8px var(--shadow-dark), 0 0 25px var(--accent-glow);">نور الإيمان</h3>
         
         <div>
             <div class="menu-item" onclick="showSection('zikr-section'); toggleMenu();">
@@ -488,10 +490,8 @@
     </nav>
 
     <script>
-        // Security
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // Splash Screen
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
@@ -502,7 +502,6 @@
             checkBookmark();
         });
 
-        // Menu Logic
         function toggleMenu() {
             document.getElementById('side-menu').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
@@ -517,7 +516,6 @@
             }
         }
 
-        // Daily Reset
         function checkDailyReset() {
             const lastReset = localStorage.getItem('lastResetDate');
             const today = new Date().toLocaleDateString();
@@ -527,7 +525,6 @@
             }
         }
 
-        // Zikr
         const azkar = [
             { text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", target: 100 },
             { text: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ", target: 100 },
@@ -563,13 +560,12 @@
         function resetZikr(id) { document.getElementById(`count-${id}`).innerText = '0'; }
         renderAzkar();
 
-        // Dua
         const duas = [
-            { arabic: "بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي وبِكَ أَرْفَعُهُ...", kurdish: "ب ناڤێ تە ئەی پەروەردگارێ من، من تەنیشتا خۆ دانا و ب تە رادکەم..." },
-            { arabic: "اللَّهُمَّ إِنَّكَ خَلَقْتَ نَفْسِي وَأَنْتَ تَوَفَّاهَا...", kurdish: "خودایێ من، تە گیانێ من ئافراندیە و تو دێ وەغەر پێ کەی..." },
-            { arabic: "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا", kurdish: "ب ناڤێ تە ئەی خودا دمرم و دژیم (دنڤم و رادبم)" },
-            { arabic: "بِسْمِ اللَّهِ ، اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبْثِ وَالْخَبَائِثِ", kurdish: "ب ناڤێ خودێ، خودایێ من ئەز ب تە دهێمە پاراستن ژ پیسی و شەیتانان (دەستئاڤ)" },
-            { arabic: "غُفْرَانَكَ", kurdish: "داخوازا لێخۆشبوونێ ژ تە دکەم (دەرکەفتن ژ دەستئاڤێ)" }
+            { arabic: "بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي وبِكَ أَرْفَعُهُ..." },
+            { arabic: "اللَّهُمَّ إِنَّكَ خَلَقْتَ نَفْسِي وَأَنْتَ تَوَفَّاهَا..." },
+            { arabic: "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا" },
+            { arabic: "بِسْمِ اللَّهِ ، اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبْثِ وَالْخَبَائِثِ" },
+            { arabic: "غُفْرَانَكَ" }
         ];
 
         function renderDuas() {
@@ -581,8 +577,7 @@
                 const card = document.createElement('div');
                 card.className = 'neu-card';
                 card.innerHTML = `
-                    <p style="font-family:'Amiri'; font-size:1.8rem; text-align:center; margin-bottom:15px; line-height:1.8;">${dua.arabic}</p>
-                    <p style="color:var(--text-light); text-align:center; font-size:1.1rem; margin-bottom:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px; opacity:0.8;">${dua.kurdish}</p>
+                    <div class="dua-text-3d">${dua.arabic}</div>
                     <button id="dua-btn-${index}" class="dua-action-btn ${isCompleted ? 'completed' : ''}" onclick="incrementDua(${index})">
                         ${isCompleted ? 'تەمام بوو ✔' : `خاندن (${savedCount}/3)`}
                     </button>
@@ -604,9 +599,8 @@
         }
         renderDuas();
 
-        // Quran Audio Logic for iOS
         let surahList = [], ayahTimings = [], currentAyahIndex = 0;
-        let globalAudio = new Audio(); // Global audio object to bypass iOS restriction
+        let globalAudio = new Audio();
         
         const removeDiacritics = str => str.replace(/[ًٌٍَُِّْٰ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه');
 
@@ -738,4 +732,3 @@
     </script>
 </body>
 </html>
-
