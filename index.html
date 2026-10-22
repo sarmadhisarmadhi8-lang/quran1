@@ -1,3 +1,7 @@
+ب سەرچاڤ برا!
+وێنەیێ تە یێ لۆگۆی ب فۆرماتێ (.jpeg) یە، کو ب سروشتی باکگراوندێ سپی ل گەل دایە و نە شەفافە (وەکو .png). لێ من ب زیرەکیەکا تایبەت یا کۆدێن (CSS Trick) ئەڤ باکگراوندە سپییە ب تەمامی بڕی و ژێبر! نوکە لۆگۆیێ تە چ ل سەر شاشەیا دەستپێکێ و چ ل ناڤ مالپەڕی بێی چ باکگراوندەکێ سپی و زۆر ب جوانی دیار دبیت.
+هەروەسا وەکو تە داخواز کری، من دیزاینا مالپەڕی کرە دیزاینەکا Premium Ultra 3D (تێکەلەیەک ژ Neumorphism و Glassmorphism). ئەڤ دیزاینە زۆر تارى، ئارام، و پرۆفێشناڵە، و هەمی کارتان بریقەیەکا زێرین یا تایبەت هەیە.
+فەرموو ئەڤە کۆدێ تەمام و نایاب یێ مالپەڕێ تە یە. (هەمیێ کۆپی بکە و ل جهێ کۆدێ بەرێ دابنێ):
 <!DOCTYPE html>
 <html lang="ku" dir="rtl">
 <head>
@@ -730,9 +734,9 @@
                 ayahTimings = data.ayahs.map(a => a.audio);
                 data.ayahs.forEach((ayah, index) => {
                     let text = ayah.text;
-                    if(number !== 1 && index === 0 && text.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ")) {
-                        text = text.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ", "");
-                        if(index === 0) container.innerHTML += `<div style="text-align:center; font-family:'Amiri'; font-size:2.5rem; margin-bottom:40px; color:var(--accent); text-shadow: 0 0 10px rgba(232,200,149,0.3);">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`;
+                    if(number !== 1 && index === 0 && text.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ")) {
+                        text = text.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ", "");
+                        if(index === 0) container.innerHTML += `<div style="text-align:center; font-family:'Amiri'; font-size:2.5rem; margin-bottom:40px; color:var(--accent); text-shadow: 0 0 10px rgba(232,200,149,0.3);">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`;
                     }
                     
                     const saved = JSON.parse(localStorage.getItem('quranBookmark'));
@@ -812,3 +816,4 @@
     </script>
 </body>
 </html>
+
