@@ -1,3 +1,9 @@
+ب سەرچاڤ برا! ئەز ب تەمامی ل کێشەیێ تێگەهشتم.
+سەدەما کو دەنگ نەدهات دوو تشت بوون:
+١. سیستەمێ پاراستنێ (Security) یێ کو مە د مالپەڕی دا جێگیر کربوو، زۆر یێ دژوار بوو و رێگری ل سێرڤەرێ دەنگی یێ قورئانێ (cdn.islamic.network) دکر، لەوما براوزەری دەنگ بلۆک دکر و نەدئینا.
+٢. سیستەمێ ئایفۆنێ (iOS) هەندەک جاران ب دروستی دەنگی ناخوێنیت ئەگەر پلەیەرێ دەنگی (Audio Player) ب شێوەیەکێ گشتی (Global) نەهێتە دروستکرن.
+من ئەڤ هەردوو کێشە ب تەمامی چارەسەر کرن. من لینکێ سێرڤەرێ دەنگی خستە د ناڤ لیستا رێپێدای یێ سیکیوریتیێ دا، و هەروەسا من سیستەمێ جافاسکریپت یێ دەنگی ب تەمامی بۆ ئایفۆنێ گۆنجاند کو بێ کێشە ئایەت ب ئایەت بخوێنیت.
+فەرموو برا، ئەڤە کۆدێ تەمامە یێ چارەسەرکری (هەمیێ کۆپی بکە و ل جهێ کۆدێ بەرێ دابنێ):
 <!DOCTYPE html>
 <html lang="ku" dir="rtl">
 <head>
@@ -5,11 +11,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>نور الإيمان</title>
     
-    <!-- Security & API Meta Tags -->
+    <!-- Security & API Meta Tags (Fixed Audio Source) -->
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="no-referrer">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com https://server8.mp3quran.net https://*.mp3quran.net https://www.youtube.com https://youtube.com https://api.alquran.cloud data: blob:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com https://server8.mp3quran.net https://*.mp3quran.net https://www.youtube.com https://youtube.com https://api.alquran.cloud https://cdn.islamic.network data: blob:;">
 
     <!-- WhatsApp & Social Media Meta Tags -->
     <meta property="og:title" content="نور الإيمان" />
@@ -57,7 +63,7 @@
         /* Fixed Splash Screen Layout */
         #splash-screen {
             position: fixed;
-            inset: 0; /* Ensures it perfectly covers the whole screen on iOS */
+            inset: 0; 
             background-color: var(--bg-color);
             z-index: 99999;
             display: flex;
@@ -160,7 +166,6 @@
             box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
             transition: all 0.2s ease;
         }
-        /* When clicked, the button goes inside (pressed effect) */
         .counter-btn:active {
             box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light);
             color: #fff;
@@ -346,7 +351,7 @@
         }
         .side-menu.active { right: 0; }
         
-        /* Fixed Menu Items using DIV instead of A to prevent iOS bugs */
+        /* Fixed Menu Items using DIV */
         .menu-item {
             padding: 18px;
             border-radius: 15px;
@@ -392,7 +397,7 @@
     </style>
 </head>
 <body>
-    <!-- Splash Screen (Fixed layout for iOS) -->
+    <!-- Splash Screen -->
     <div id="splash-screen">
         <img src="nor.jpeg" alt="نور الإيمان" class="splash-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' fill=\'%23D6BD98\'/><text x=\'50\' y=\'65\' font-size=\'50\' text-anchor=\'middle\' fill=\'%23121818\'>N</text></svg>'">
         <h1 class="splash-title">نور الإيمان</h1>
@@ -466,14 +471,13 @@
         </main>
     </div>
 
-    <!-- Sidebar Menu (Fixed structure for iOS touch) -->
+    <!-- Sidebar Menu -->
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     <nav class="side-menu" id="side-menu">
         <button onclick="toggleMenu()" style="color:var(--text-light); font-size:1.8rem; background:none; border:none; cursor:pointer;"><i class="fas fa-times"></i></button>
         <h3 style="color: var(--accent); text-align: center; margin-top: 10px; font-size: 2rem; margin-bottom: 40px;">پێڕست</h3>
         
         <div>
-            <!-- Using DIV instead of A tags to fix iOS touch bugs -->
             <div class="menu-item" onclick="showSection('zikr-section'); toggleMenu();">
                 <i class="fas fa-ring" style="color:var(--accent); width:25px;"></i> زکرێ رۆژانە
             </div>
@@ -504,7 +508,7 @@
             checkBookmark();
         });
 
-        // Menu Logic (Bug fixed)
+        // Menu Logic
         function toggleMenu() {
             document.getElementById('side-menu').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
@@ -606,8 +610,10 @@
         }
         renderDuas();
 
-        // Quran
-        let surahList = [], currentAudio = null, ayahTimings = [], currentAyahIndex = 0;
+        // Quran Audio Logic for iOS
+        let surahList = [], ayahTimings = [], currentAyahIndex = 0;
+        let globalAudio = new Audio(); // Global audio object to bypass iOS restriction
+        
         const removeDiacritics = str => str.replace(/[ًٌٍَُِّْٰ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه');
 
         async function fetchSurahs() {
@@ -701,12 +707,17 @@
 
         function toggleQuranAudio() {
             const btn = document.getElementById('quran-play-btn');
-            if (!currentAudio || currentAudio.paused) playSpecificAyah(currentAyahIndex);
-            else { currentAudio.pause(); btn.innerHTML = '<i class="fas fa-play"></i>'; }
+            if (globalAudio.paused || !globalAudio.src) {
+                playSpecificAyah(currentAyahIndex);
+            } else { 
+                globalAudio.pause(); 
+                btn.innerHTML = '<i class="fas fa-play"></i>'; 
+            }
         }
 
         function stopQuranAudio() {
-            if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+            globalAudio.pause();
+            globalAudio.currentTime = 0;
             const playBtn = document.getElementById('quran-play-btn');
             if(playBtn) playBtn.innerHTML = '<i class="fas fa-play"></i>';
             document.querySelectorAll('.ayah').forEach(a => a.classList.remove('active-ayah'));
@@ -714,16 +725,17 @@
         }
 
         function playSpecificAyah(index) {
-            if (currentAudio) currentAudio.pause();
+            globalAudio.pause();
             currentAyahIndex = index;
             document.querySelectorAll('.ayah').forEach(a => a.classList.remove('active-ayah'));
             const el = document.getElementById(`ayah-${index}`);
             if(el) { el.classList.add('active-ayah'); el.scrollIntoView({behavior: 'smooth', block: 'center'}); }
             
-            currentAudio = new Audio(ayahTimings[index]);
+            globalAudio.src = ayahTimings[index];
             document.getElementById('quran-play-btn').innerHTML = '<i class="fas fa-pause"></i>';
-            currentAudio.play();
-            currentAudio.onended = () => {
+            globalAudio.play().catch(err => console.log("Audio Error:", err));
+            
+            globalAudio.onended = () => {
                 if (currentAyahIndex + 1 < ayahTimings.length) playSpecificAyah(currentAyahIndex + 1);
                 else stopQuranAudio();
             };
@@ -732,3 +744,4 @@
     </script>
 </body>
 </html>
+
