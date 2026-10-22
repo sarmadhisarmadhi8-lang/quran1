@@ -26,11 +26,12 @@
     <link rel="icon" type="image/jpeg" href="nor.jpeg">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Added Aref Ruqaa font for a beautiful Islamic Calligraphy look -->
+    <!-- Fonts: Aref Ruqaa for Titles, Amiri for Quran, Noto Sans for UI -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
+            /* Neumorphism Colors */
             --bg-color: #121818;
             --shadow-light: #1a2222;
             --shadow-dark: #0a0e0e;
@@ -54,6 +55,7 @@
             overflow-x: hidden;
         }
 
+        /* Splash Screen */
         #splash-screen {
             position: fixed;
             inset: 0; 
@@ -93,6 +95,7 @@
             padding: 20px;
         }
 
+        /* Neumorphism 3D Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -122,6 +125,7 @@
         }
         .menu-btn { background: none; border: none; color: var(--accent); font-size: 1.6rem; cursor: pointer; }
 
+        /* Section Titles */
         .section-title {
             text-align: center;
             font-size: 2.4rem;
@@ -134,6 +138,7 @@
             padding-bottom: 5px;
         }
 
+        /* 3D Neumorphism Cards */
         .neu-card {
             background-color: var(--bg-color);
             border-radius: 25px;
@@ -143,6 +148,7 @@
             transition: 0.3s ease;
         }
 
+        /* 3D Circular Counter Button */
         .counter-btn {
             width: 150px;
             height: 150px;
@@ -184,6 +190,7 @@
             box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
         }
 
+        /* Inset 3D Text Container for Duas */
         .dua-text-3d {
             font-family: 'Amiri', serif; 
             font-size: 2rem; 
@@ -197,6 +204,7 @@
             color: var(--accent);
         }
 
+        /* Dua Action Button */
         .dua-action-btn {
             width: 100%;
             padding: 18px;
@@ -219,6 +227,7 @@
             box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
         }
 
+        /* Quran Search */
         .search-box {
             width: 100%;
             padding: 18px 25px;
@@ -282,6 +291,7 @@
             box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
         }
 
+        /* Ayah Design */
         .ayah {
             font-family: 'Amiri', serif;
             font-size: 2.2rem;
@@ -309,6 +319,7 @@
         }
         .bookmark-btn.active { color: var(--accent); text-shadow: 0 0 15px var(--accent); transform: scale(1.2); }
 
+        /* Audio Player 3D */
         .audio-player-fixed {
             background-color: var(--bg-color);
             border-radius: 20px;
@@ -340,6 +351,7 @@
         }
         .play-btn:active { box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light); }
 
+        /* Sidebar Menu */
         .side-menu {
             position: fixed;
             top: 0;
@@ -455,7 +467,8 @@
             <h2 class="section-title"><span>فێرکرنا نڤێژێ</span></h2>
             <div class="neu-card">
                 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 15px;">
-                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" src="https://www.youtube.com/embed/5F2v_7n91rA" allowfullscreen></iframe>
+                    <!-- Updated iframe link and attributes as requested -->
+                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" src="https://www.youtube.com/embed/73nsf5jupHo?si=H-QKUT6bDDLXJ0LM" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
             </div>
         </main>
@@ -470,7 +483,6 @@
     <nav class="side-menu" id="side-menu">
         <button onclick="toggleMenu()" style="color:var(--text-light); font-size:1.8rem; background:none; border:none; cursor:pointer;"><i class="fas fa-times"></i></button>
         
-        <!-- گۆهۆڕینا پێڕست بۆ نور الإيمان ب فۆنتێ نایاب یێ Aref Ruqaa -->
         <h3 style="color: var(--accent); text-align: center; margin-top: 10px; font-size: 3rem; font-family: 'Aref Ruqaa', serif; margin-bottom: 40px; text-shadow: 4px 4px 8px var(--shadow-dark), 0 0 25px var(--accent-glow);">نور الإيمان</h3>
         
         <div>
@@ -490,8 +502,15 @@
     </nav>
 
     <script>
+        // Security & Anti-inspect
         document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) return false;
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        };
 
+        // Initialization
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
@@ -502,6 +521,7 @@
             checkBookmark();
         });
 
+        // Menu Logic
         function toggleMenu() {
             document.getElementById('side-menu').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
@@ -516,6 +536,7 @@
             }
         }
 
+        // Daily Reset
         function checkDailyReset() {
             const lastReset = localStorage.getItem('lastResetDate');
             const today = new Date().toLocaleDateString();
@@ -525,6 +546,7 @@
             }
         }
 
+        // Zikr
         const azkar = [
             { text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", target: 100 },
             { text: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ", target: 100 },
@@ -560,6 +582,7 @@
         function resetZikr(id) { document.getElementById(`count-${id}`).innerText = '0'; }
         renderAzkar();
 
+        // Dua (Arabic only as requested)
         const duas = [
             { arabic: "بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي وبِكَ أَرْفَعُهُ..." },
             { arabic: "اللَّهُمَّ إِنَّكَ خَلَقْتَ نَفْسِي وَأَنْتَ تَوَفَّاهَا..." },
@@ -599,8 +622,9 @@
         }
         renderDuas();
 
+        // Quran Audio Logic for iOS
         let surahList = [], ayahTimings = [], currentAyahIndex = 0;
-        let globalAudio = new Audio();
+        let globalAudio = new Audio(); // Global audio object to bypass iOS restriction
         
         const removeDiacritics = str => str.replace(/[ًٌٍَُِّْٰ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه');
 
@@ -650,9 +674,9 @@
                 ayahTimings = data.ayahs.map(a => a.audio);
                 data.ayahs.forEach((ayah, index) => {
                     let text = ayah.text;
-                    if(number !== 1 && index === 0 && text.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ")) {
-                        text = text.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ", "");
-                        if(index === 0) container.innerHTML += `<div style="text-align:center; font-family:'Amiri'; font-size:2.2rem; margin-bottom:30px; color:var(--accent);">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`;
+                    if(number !== 1 && index === 0 && text.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ")) {
+                        text = text.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ", "");
+                        if(index === 0) container.innerHTML += `<div style="text-align:center; font-family:'Amiri'; font-size:2.2rem; margin-bottom:30px; color:var(--accent);">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`;
                     }
                     
                     const saved = JSON.parse(localStorage.getItem('quranBookmark'));
