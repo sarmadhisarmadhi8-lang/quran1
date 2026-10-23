@@ -199,6 +199,27 @@
             pointer-events: none;
         }
         .neu-card:hover::before { opacity: 1; }
+        
+        .neu-card-btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(145deg, #0e1515, #0b1111);
+            border-radius: 25px;
+            padding: 35px 25px;
+            margin-bottom: 25px;
+            box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light);
+            border: 1px solid rgba(232, 200, 149, 0.05); 
+            transition: 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            color: var(--accent);
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .neu-card-btn:active {
+            box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light);
+            transform: scale(0.98);
+        }
 
         /* 3D Circular Counter Button */
         .counter-btn {
@@ -334,7 +355,7 @@
             box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
         }
 
-        /* Ayah Design - Deep Inset Shadow for 3D Carved effect */
+        /* Ayah Design */
         .ayah {
             font-family: 'Amiri', serif;
             font-size: 2.4rem;
@@ -366,7 +387,7 @@
         .audio-player-fixed {
             background: linear-gradient(145deg, #0e1515, #0b1111);
             border-radius: 25px;
-            padding: 15px;
+            padding: 15px 25px;
             margin-bottom: 30px;
             display: flex;
             align-items: center;
@@ -431,6 +452,7 @@
             z-index: 10000;
             box-shadow: -15px 0 40px rgba(0,0,0,0.9);
             border-left: 1px solid rgba(255,255,255,0.02);
+            overflow-y: auto;
         }
         .side-menu.active { right: 0; }
         
@@ -562,6 +584,32 @@
             <h2 class="section-title"><span>دوعایێن خەوێ و رۆژانە</span></h2>
             <div id="dua-container"></div>
         </main>
+
+        <!-- Hadith and Stories Section -->
+        <main id="hadith-section" class="section">
+            <h2 class="section-title"><span>فەرموودە و چیرۆک</span></h2>
+            
+            <!-- Main Choice Menu -->
+            <div id="hs-main-menu">
+                <button class="neu-card-btn" onclick="showHSCategory('hadiths')">
+                    <i class="fas fa-comment-dots" style="font-size:3.5rem; margin-bottom:15px; color:var(--text-light);"></i><br>
+                    فەرموودەیێن پێغەمبەری (ﷺ)
+                </button>
+                <button class="neu-card-btn" onclick="showHSCategory('prophets_list')">
+                    <i class="fas fa-book-open" style="font-size:3.5rem; margin-bottom:15px; color:var(--text-light);"></i><br>
+                    چیرۆکێن ژیانا پێغەمبەران
+                </button>
+            </div>
+
+            <!-- Content View -->
+            <div id="hs-content-view" style="display:none;">
+                <div class="top-bar">
+                    <button class="back-btn" onclick="goBackHS()"><i class="fas fa-arrow-right"></i></button>
+                    <h2 id="hs-content-title" style="font-family: 'Aref Ruqaa'; color: var(--accent); font-size: 2.2rem; text-shadow: 2px 2px 4px var(--shadow-dark);"></h2>
+                </div>
+                <div id="hs-items-container"></div>
+            </div>
+        </main>
     </div>
 
     <!-- Sidebar Menu -->
@@ -582,6 +630,9 @@
             </div>
             <div class="menu-item" onclick="showSection('dua-section'); toggleMenu();">
                 <i class="fas fa-hands-praying" style="color:var(--accent); width:30px; font-size:1.4rem;"></i> دوعایێن خەوێ و رۆژانە
+            </div>
+            <div class="menu-item" onclick="showSection('hadith-section'); toggleMenu();">
+                <i class="fas fa-book-open" style="color:var(--accent); width:30px; font-size:1.4rem;"></i> فەرموودە و چیرۆک
             </div>
         </div>
     </nav>
@@ -613,6 +664,11 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
             if(sectionId !== 'quran-reader-section' && typeof stopQuranAudio === 'function') {
                 stopQuranAudio();
+            }
+            if(sectionId === 'hadith-section') {
+                currentHSState = 'menu';
+                document.getElementById('hs-main-menu').style.display = 'block';
+                document.getElementById('hs-content-view').style.display = 'none';
             }
         }
 
@@ -705,11 +761,237 @@
         }
         renderDuas();
 
-        // Quran Audio & Speed Logic for iOS
+        // Hadiths and Stories (Multi-Level Logic with Full Prophets Detailed)
+        let currentHSState = 'menu'; 
+        
+        const hadithsData = [
+            { title: "نیەت", arabic: "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى", kurdish: "ب راستى کار و کریار ب نیەتانە، و هەر کەسەکێ ئەو تشتە بۆ هەیە یێ وی نیەت پێ ئینای." },
+            { title: "فێربوونا قورئانێ", arabic: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", kurdish: "باشترینێ هەوە ئەو کەسە یێ قورئانێ دخوێنیت و فێری خەلکی دکەت." },
+            { title: "رەوشت", arabic: "أَكْمَلُ الْمُؤْمِنِينَ إِيمَانًا أَحْسَنُهُمْ خُلُقًا", kurdish: "کاملترینێ باوەرداران ژ روویێ باوەریێ ڤە، ئەو کەسە یێ رەوشتێ وی باشترین بیت." },
+            { title: "سلامەتیا خەلکی", arabic: "الْمُسْلِمُ مَنْ سَلِمَ الْمُسْلِمُونَ مِنْ لِسَانِهِ وَيَدِهِ", kurdish: "موسلمانێ دروست ئەوە یێ کو موسلمانێن دی ژ ئەزمانێ وی و دەستێ وی د سلامەت بن." },
+            { title: "خێر و چاکە", arabic: "كُلُّ مَعْرُوفٍ صَدَقَةٌ", kurdish: "هەر کارەکێ باش و خێر، وەکو خێرەکێ (سەدەقەیەکێ) یە ل دەف خودایێ مەزن." }
+        ];
+
+        const prophetsData = [
+            {
+                id: 'muhammad',
+                name: "پێغەمبەر موحەممەد (ﷺ)",
+                stories: [
+                    { title: "١. ژدایکبوون و سێویبوون", kurdish: "ل باژێرێ مەککەهێ ل سالا فیل ژدایک بوو. بەری ژدایک ببیت بابێ وی وەغەر کر، و ل ٦ سالیێ دەیکا وی ژی وەغەر کر. ب سێوی ل دەف باپیرێ وی و پاشان مامێ وی ئەبو تالب مەزن بوو." },
+                    { title: "٢. سەردەمێ گەنجاتیێ و کافران", kurdish: "بەری پێغەمبەرایەتیێ ژی، خەلکێ مەککەهێ یێن کافر باوەریەکا زۆر پێ هەبوو و نازناڤێ (راستگۆ و دەستپاک) دابوونێ. ل تەمەنێ ٢٥ سالیێ خەدیجەیا کچا خوەیلدی خواست." },
+                    { title: "٣. دەستپێکا وەحیێ و دژایەتیا کافران", kurdish: "ل ٤٠ سالیێ جوبرەئیل هاتە خوارێ و ئێکەم ئایەت بۆ خاند. دەمێ دەست ب بەلاڤکرنا ئیسلامێ کری، کافرێن قورەیشیان ب دژواری دژایەتیا وی کر و ئەشکەنجەیا باوەرداران دا، وەکو بلالێ حەبەشی." },
+                    { title: "٤. ئیسرا و میعراج", kurdish: "پشتی کو مامێ وی و خێزانا وی وەغەرکرین و کافران زۆرداری لێ کری، خودێ وەکو پشتەڤانییەک د شەڤەکێ دا ئەو برە قودسێ و پاشان بۆ ئەسمانان، و ل وێرێ نڤێژ ل سەر موسلمانان فەرز بوون." },
+                    { title: "٥. کۆچکرن و ئاڤاکرنا باوەرداران", kurdish: "ب فەرمانا خودێ پێغەمبەر (ﷺ) و باوەرداران ژ زۆرداریا کافران کۆچ کر بەرەڤ مەدینەیێ. ل وێرێ ئێکەم مزگەفت ئاڤا کر و برایەتی د ناڤبەرا موسلمانان دا دروست کر و دەولەتا ئیسلامی راگەهاند." },
+                    { title: "٦. شەڕێ ل گەل کافران (بەدر و ئوحود)", kurdish: "کافران ل مەککەهێ دەستبەرداری موسلمانان نەبوون و هێرش کرن. پێغەمبەری ل گەل موسلمانان سەرکردایەتیا وان کر د شەڕێ بەدرێ دا و سەرکەفتنەکا مەزن ب دەستڤە ئینا. ل شەڕێ ئوحودێ ژی موسلمانان دەرسەکا مەزن فێربوون." },
+                    { title: "٧. فەتحا مەککەهێ و لێخۆشبوون", kurdish: "ل سالا ٨ێ کۆچی، پێغەمبەر ب لەشکرەکێ مەزنێ موسلمانان زڤڕیڤە مەککەهێ. بێی رشتنا خوینێ باژێر رزگار کر و پوت شکاندن، و ل کافران خۆش بوو و گۆتێ: 'هەرن هوین یێن ئازادن'، کو ئەڤە بوو ئەگەرێ باوەریئینانا پڕانیا وان." },
+                    { title: "٨. حەجا مالئاڤایی و وەغەرکرن", kurdish: "ل سالا ١٠ێ کۆچی گۆتارا مالئاڤایی پێشکێش کر و مافێن مرۆڤان رۆهن کرن. ل سالا ١١ێ کۆچی وەغەر کر و د دلێ هەمی موسلمانان دا جهێ خۆ کر." }
+                ]
+            },
+            {
+                id: 'adam',
+                name: "پێغەمبەر ئادەم (س.خ)",
+                stories: [
+                    { title: "١. ئافراندن و باوەری", kurdish: "خودایێ مەزن ئادەم ژ ئاخێ دروست کر، و فەرمان ل هەمی فریشتەیان کر کو سوجدێ (کڕنۆشێ) بۆ ببەن. هەمیان فەرمان بجهـ ئینا ژبلی 'ئیبلیس' کو خۆ مەزن کر و کافر بوو." },
+                    { title: "٢. خاپاندنا شەیتانی", kurdish: "ئادەم و حەوا ل بەهەشتێ دژیان، لێ شەیتانی یێ کافر ئەو خاپاندین دا کو ژ وێ دارێ بخۆن یا خودێ قەدەغە کری. پشتی خوارنێ، خودێ ئەو ئینانە سەر ئەردی." },
+                    { title: "٣. تۆبەکرن و لێخۆشبوون", kurdish: "ئادەمی (س.خ) وەکو ئێکەم باوەردار یەکسەر داخوازا لێخۆشبوونێ کر، و خودایێ مەزن تۆبەیا وی قەبوول کر و ئەو کرە ئێکەم پێغەمبەر بۆ رێنماییکرنا زارۆکێن خۆ." }
+                ]
+            },
+            {
+                id: 'idris',
+                name: "پێغەمبەر ئیدریس (س.خ)",
+                stories: [
+                    { title: "١. زانست و پەرستن", kurdish: "ئیدریس یەکەم پێغەمبەر بوو پشتی ئادەمی. ئەو یەکەم کەس بوو کو ب قەلەمی نڤێسی و جلوبەرگ دیتین. باوەردارەکێ زۆر ب هێز بوو و رۆژانە گەلەک زکرێ خودێ دکر." },
+                    { title: "٢. رووبەڕووبوونا کافران", kurdish: "ل سەردەمێ وی، هندەک کەسان دەست ب خرابکاریێ و بێڕەوشتیێ کر ل سەر ئەردی. پێغەمبەر ئیدریسی دژایەتیا وان کافران کر و باوەردار کۆم کرن بۆ پاراستنا حەقیێ." }
+                ]
+            },
+            {
+                id: 'nuh',
+                name: "پێغەمبەر نووح (س.خ)",
+                stories: [
+                    { title: "١. بانگەوازیا بەردەوام", kurdish: "پێغەمبەر نووح بۆ دەمێ ٩٥٠ سالان بانگەوازیا گەلێ خۆ کر. لێ پڕانیا گەلێ وی کافر بوون و دگۆتنێ تو یێ دێتی، و تنێ ژمارەیەکا زۆر کێم یا هەژاران باوەری (موسلمانی) پێ ئینا." },
+                    { title: "٢. چێکرنا کەشتیێ", kurdish: "خودێ فەرمان دایێ کو کەشتیەکا مەزن چێکەت. دەمێ باوەرداران کەشتی چێدکر، کافران بێڕێزی و یاری ب وان دکرن کو چەوا کەشتیێ ل بیابانێ چێدکەن." },
+                    { title: "٣. تۆفان و خەندقینا کافران", kurdish: "تۆفانەکا زۆر مەزن رابوو. نووح و باوەردار ل ناڤ کەشتیێ رزگار بوون، لێ هەمی کافر دگەل کوڕێ نووحی (کو کافر بوو) ل ناڤ ئاڤێ دا خەندقین و هاتنە ژناڤبرن." }
+                ]
+            },
+            {
+                id: 'hud',
+                name: "پێغەمبەر هود (س.خ)",
+                stories: [
+                    { title: "١. گەلێ عاد یێ زالم", kurdish: "هود بۆ گەلێ 'عاد' هاتە فرێکرن. ئەو گەلەک د زەبەلاح، زەنگین و ب هێز بوون، لێ وان باوەری ب خودێ نەئینا و پوت دپەرستن و زۆرداری ل هەژاران دکر." },
+                    { title: "٢. شێرەت و دژایەتیا کافران", kurdish: "هودی شیرەت ل وان کرن کو خودێ بپەرستن بۆ هندێ کو رزگار ببن، لێ کافران گۆتێ: 'کێ هێزا خۆ ژ مە پترە؟' و باوەری ب وی و باوەرداران نەئینا." },
+                    { title: "٣. سزایێ رەشەبایێ", kurdish: "خودێ رەشەبایەکێ زۆر دژوار و سار بۆ دەمێ حەڤت شەڤ و هەشت رۆژان فرێکرە سەر کافران و هەمی ژناڤبرن. و خودێ هود و باوەردار ژ ڤی سزای رزگار کرن." }
+                ]
+            },
+            {
+                id: 'salih',
+                name: "پێغەمبەر سالەح (س.خ)",
+                stories: [
+                    { title: "١. گەلێ ثەموود و موعجیزە", kurdish: "سالەح بۆ گەلێ 'ثەموود' هاتە فرێکرن کو خانى د ناڤ چیایان دا دکۆلاین. کافران داخوازا موعجیزەیەکێ کر ژ بۆ باوەریێ، خودێ حێشترەکا مەزن ژ تاشکەڤرەکی بۆ وان ئینا دەر." },
+                    { title: "٢. خیانەتا کافران", kurdish: "سالەحی گۆتە وان کو زەرەرێ نەگەهیننە وێ حێشترێ، لێ سەرکردەیێن کافران رابوون حێشتر کوشت و بێڕێزی ب فەرمانا خودێ و پێغەمبەری کرن." },
+                    { title: "٣. سزایێ دەنگێ سامناک (الصیحة)", kurdish: "پشتی سێ رۆژان، ب دەنگەکێ زۆر سامناک و ب هێز ژ ئەسمانی، هەمی کافر ل مالێن خۆ دا مرن و پەقین. و خودایێ مەزن سالەح و باوەردار ژ وی سزای پاراستن." }
+                ]
+            },
+            {
+                id: 'ibrahim',
+                name: "پێغەمبەر ئیبراهیم (س.خ)",
+                stories: [
+                    { title: "١. شکاندنا پوتێن کافران", kurdish: "د گەنجاتیا خۆ دا، ئیبراهیمی ددیت کو گەلێ وی و بابێ وی پوتان دپەرستن. رۆژەکێ ئەو چوو و هەمی پوتێن وان شکاندن ژبلی یێ هەرە مەزن، دا کو تێبگەهن کو ئەو پوت نەشێن خۆ ژی بپارێزن." },
+                    { title: "٢. هاڤێتنا د ناڤ ئاگری دا", kurdish: "دەمێ کافران و پاشایێ زالم (نەمرود) زانی، ئاگرەکێ زۆر مەزن هەلکر و ئیبراهیم هاڤێتە تێدا. لێ ب فەرمانا خودێ ئاگر بۆ سار و سەلامەت و باوەردارێ مەزن رزگار بوو." },
+                    { title: "٣. ئاڤاکرنا کەعبەیێ و تاقیکرن", kurdish: "ئیبراهیم کۆچ کر بۆ فەلەستینێ و مەککەهێ. خودێ ئەو تاقی کر ب فەرمانا سەڕژێکرنا کوڕێ خۆ (ئیسماعیل)، دەمێ وان ب دل بجهـ ئینای، خودێ پەزەک فرێکر. پاشان هەردووکان پێکڤە کەعبەیا پیرۆز ئاڤا کر." }
+                ]
+            },
+            {
+                id: 'lut',
+                name: "پێغەمبەر لووت (س.خ)",
+                stories: [
+                    { title: "١. گەلێ سەدۆم یێ کرێت", kurdish: "لووت بۆ گەلێ 'سەدۆم' هاتە فرێکرن. ئەوان کارەکێ هۆسا کرێت و بێڕەوشتی دکر (نێربازی) کو بەری وان چ کەسان ل دونیایێ نەکربوو. لووتی بانگەوازیا وان کر لێ کافران گۆهـ نەدایێ." },
+                    { title: "٢. هاتنا فریشتەیان", kurdish: "فریشتە ب شێوەیێ گەنجێن جوان هاتنە مالا لووتی. کافران خوەستی دەستدرێژیێ ل وان بکەن، لێ فریشتەیان چاڤێن وان کۆرە کرن و ب لووتی گۆت کو ب شەڤ ل گەل باوەرداران ژ باژێری دەرکەڤن." },
+                    { title: "٣. سزایێ سەروبنکرنێ", kurdish: "دەمێ سپێدەهاتی، خودێ باژێرێ کافران سەروبن کر و ب بەرێن ئاگری هاتنە باران کرن. تەنانەت خێزانا لووتی ژی کو ل گەل کافران بوو، دگەل وان هاتە ژناڤبرن." }
+                ]
+            },
+            {
+                id: 'shuayb',
+                name: "پێغەمبەر شوعەیب (س.خ)",
+                stories: [
+                    { title: "١. گەلێ مەدیەن و دزی", kurdish: "شوعەیب بۆ گەلێ 'مەدیەن' هاتە فرێکرن. وان کافران د بازرگانیێ دا خەلک دخاپاند، تەرازی و کێشان کێم دکرن و رێگری ل رێبواران دکرن." },
+                    { title: "٢. رووبەڕووبوونا کافران", kurdish: "وی شیرەت ل وان کرن کو ل خودێ بترسن و دزیکەریێ نەکەن. لێ کافران هەڕەشە ل شوعەیبی و باوەرداران کر کو دێ وان ژ باژێری دەرێخن یان دێ وان کوژن." },
+                    { title: "٣. سزایێ عەورێ ئاگری", kurdish: "خودێ شوعەیب و باوەردار رزگار کرن، و سزایەک فرێکرە سەر کافران کو پێکهاتبوو ژ بیڤەلەرزەکێ و عەورەکێ کو ئاگر ژێ دباری، و هەمی هاتنە ژناڤبرن." }
+                ]
+            },
+            {
+                id: 'yaqub',
+                name: "پێغەمبەر یەعقووب و یووسڤ",
+                stories: [
+                    { title: "١. خەون و حەسودیا برایان", kurdish: "یووسڤی خەونەک دیت کو یازدە ستێر و رۆژ و هەیڤ سوجدێ بۆ دبەن. برایێن وی یێن مەزن ژ حەسودیێ (نە وەکو کافر، بەلکو ژ نەفامیا خۆ) ئەو هاڤێتە د بیرەکێ دا و ب بابێ خۆ (یەعقووبی) گۆتن گورگی یێ خوارتی." },
+                    { title: "٢. ژیلما مسرێ و زیندان", kurdish: "کاروانچیان ئەو دیت و ل مسرێ فرۆتە عەزیزێ مسرێ. ل وێرێ ژنا عەزیزی بزاڤا خاپاندنا وی کر، لێ یووسڤی ژ ترسا خودێ نەکر و ژبەر ڤێ چەندێ بوو چەندین سالان کەتە زیندانێ." },
+                    { title: "٣. سەروەری و لێخۆشبوون", kurdish: "خودێ زانینا شڕۆڤەکرنا خەونان دایێ، خەونا پاشایێ مسرێ شڕۆڤە کر و بوو وەزیرێ ئابووری. دەمێ برایێن وی هاتین بۆ ئالیکاریێ، وی ئەو ناسکرن و لێ خۆش بوو، و باوەردار (خێزانا وی هەمی) ل مسرێ ب خوشی شاد بوونەڤە." }
+                ]
+            },
+            {
+                id: 'ayyub',
+                name: "پێغەمبەر ئەییووب (س.خ)",
+                stories: [
+                    { title: "١. باوەری د خوشیێ دا", kurdish: "ئەییووب پێغەمبەرەکێ زەنگین بوو، مال و زارۆکێن زۆر هەبوون، و هەمیشە سوپاسیا خودێ دکر و هاریکاریا هەژاران دکر. شەیتانی دگۆت ئەڤە بتنێ ژبەر زەنگینیێ یە." },
+                    { title: "٢. تاقیکرنا گران و سەبر", kurdish: "خودێ وەکو تاقیکرنەک، هەمی مال و زارۆکێن وی ژێ وەرگرتن، و تووشی نەخۆشیەکا هۆسا گران بوو کو هەمی خەلکی (تەنانەت هەڤالێن وی) ژێ دویر کەفتن، ژبلی خێزانا وی یا باوەردار. لێ وی قەت گازندە نەکر." },
+                    { title: "٣. خەلاتێ بێهنفرەهیێ", kurdish: "پشتی چەندین سالان ژ سەبرێ، خودێ فەرمان دایێ کو پێیێ خۆ ل ئەردی بدەت. کانیکەکا ئاڤێ دەرکەفت، پێ خۆ شووشت و ڤەخوار، و ب تەمامی ساخ بووڤە و خودێ مال و زارۆکێن وی پتر ژ بەرێ بۆ زڤڕاندنەڤە." }
+                ]
+            },
+            {
+                id: 'musa',
+                name: "پێغەمبەر مووسا و هاروون",
+                stories: [
+                    { title: "١. ژدایکبوون ل سەردەمێ زولمێ", kurdish: "فیرعەونێ کافر باوەری ب خۆ دکر کو ئەو خودایە و زارۆکێن کوڕ یێن باوەرداران (بەنی ئیسرائیل) دکوشتن. دەیکا مووسای ئەو کرە سندووقەکێ دا و ل رووبارێ نیل دا هاڤێت، و ب حیکمەتا خودێ ل مالا فیرعەونی مەزن بوو." },
+                    { title: "٢. کۆچکرن و وەحی", kurdish: "مووسا ب شاشیڤە مسریەک کوشت و رەڤی بۆ باژێرێ 'مەدیەن'. دەمێ زڤڕی، ل چیایێ 'توور' خودێ وەحی بۆ فرێکر و هاروونێ برایێ وی ژی کرە پێغەمبەر و هاریکارێ وی." },
+                    { title: "٣. رووبەڕووبوونا فیرعەونیێ کافر", kurdish: "مووسا چوو دەف فیرعەونی بۆ ئازادکرنا باوەرداران. فیرعەونی باوەری نەئینا و ساحر (سێحرباز) کۆم کرن لێ ساحران دەمێ دیتین موعجیزەیا مووسای راستە، سوجدە بر و بوونە باوەردار (موسلمان)." },
+                    { title: "٤. دەریایێ سۆر و خەندقینا کافران", kurdish: "دەمێ مووسا و باوەردار رەڤین، فیرعەون ب لەشکرێ خۆڤە ب دویڤ کەفت. مووسای گۆپالێ خۆ ل دەریایێ دا و بوو دوو پارچە. باوەردار رزگار بوون، و فیرعەونێ کافر و لەشکرێ وی هەمی خەندقین." },
+                    { title: "٥. سەرپێچیا بەنی ئیسرائیلان", kurdish: "پشتی رزگاربوونێ، دەمێ مووسا بۆ ٤٠ رۆژان چوو بۆ وەرگرتنا تەوراتێ، گەلێ وی سەرپێچی کر و دەست ب پەرستنا 'گوێلکی' کرن. ژبەر ڤێ بێباوەریێ، خودێ ئەو ل بیابانێ بۆ ٤٠ سالان سزادان." }
+                ]
+            },
+            {
+                id: 'dawud',
+                name: "پێغەمبەر داوود و سولەیمان",
+                stories: [
+                    { title: "١. داوود و باوەرداران دژی جالووت", kurdish: "دەمێ باوەردار د لاواز بوون، داوودی د گەنجاتیا خۆ دا ب غیرەتا باوەریێ شیا سەرکردەیێ کافر و زالم (جالووت) ب بەریەکێ بکوژیت، و سەرکەفتن دا باوەرداران." },
+                    { title: "٢. موعجیزە و پەرستنا داوودی", kurdish: "خودێ پاشایەتیەکا مەزن و دەنگەکێ زۆر خۆش دایە داوودی. دەمێ پەرتووکا 'زەبوور' دخاند، چیا و بالندەیان ل گەل وی زکر و پەرستنا خودێ دکر، و زۆر گرنگی ب دادیێ ددا د ناڤ خەلکی دا." },
+                    { title: "٣. پاشایەتیا مەزن یا سولەیمانی", kurdish: "کوڕێ وی سولەیمان پاشایەتیەکا بێهەمتا وەرگرت. خودێ زمانێ گیانەوەران فێرکر و جن و شەیتان و با ئێخستنە ژێر رکێفا وی دا کو بۆ وی ئاڤاهیان و کاران بکەن." },
+                    { title: "٤. بلقیس و باوەریئینان", kurdish: "سولەیمانی زانی کو شاهژنا سەبەئـ (بلقیس) و گەلێ وێ رۆژێ دپەرستن (کافرن). نامەیەک فرێکرێ و دەمێ بلقیسێ هێز و حیکمەتا وی دیتی، دەستبەرداری کافربوونێ بوو و ل گەل سولەیمانی موسلمان بوو." }
+                ]
+            },
+            {
+                id: 'yunus',
+                name: "پێغەمبەر یوونوس (س.خ)",
+                stories: [
+                    { title: "١. بێهیڤیبوون ژ کافران", kurdish: "یوونوس بۆ باژێرێ نەینەوا هاتە فرێکرن. وی زۆر بانگەوازیا وان کر لێ وان باوەری نەئینا. یوونوس عاجز بوو و بێی فەرمانا خودێ باژێر بجهـ هێلا، و کافران هەست ب ترسەکا مەزن کر." },
+                    { title: "٢. کەشتی و زکێ حوتی", kurdish: "یوونوس ل کەشتیەکێ سوار بوو، لێ دەریایێ پێلێن مەزن دا و پشک هاتە ل سەر وی کو بهاڤێژنە دەر. دەمێ هاڤێتیە ئاڤێ، نەهەنگەکێ (حوت) مەزن ب فەرمانا خودێ ئەو داعویرا بێی کو بکوژیت." },
+                    { title: "٣. دوعا و رزگاربوون", kurdish: "ل ناڤ زکێ تارى یێ حوتی دا، یوونوسی داخوازا لێخۆشبوونێ کر و تۆبە کر. خودێ ئەو رزگار کر. دەمێ زڤڕی، دیت کو گەلێ وی هەمیان تۆبە کریە و بووینە باوەردار، و خودێ ژی ل وان خۆش بوو (کو ئەڤە روودانەکا کێم وێنە یە د مێژوویێ دا)." }
+                ]
+            },
+            {
+                id: 'zakariya',
+                name: "پێغەمبەر زەکەریا و یەحیا",
+                stories: [
+                    { title: "١. دوعایا پیراتیێ", kurdish: "زەکەریا پێغەمبەرەکێ پیر بوو و دیت کو کۆمەلگەها جولەکان یا بەرەڤ خراببوونێ دچیت. خێزانا وی نەزۆک بوو، لێ وی ب باوەریەکا موکوم دوعا ژ خودێ کر کو زارۆکەکی بدەتێ دا کو ئایینی بپارێزیت." },
+                    { title: "٢. مزگینیا یەحیای", kurdish: "خودێ دوعایا باوەردارێ خۆ قەبوول کر و مزگینیا ژدایکبوونا (یەحیا) دایێ، و نیشانا وێ ژی ئەوبوو کو بۆ سێ رۆژان نەشیا باخڤیت. یەحیا ب پاکی و تەقوایەکا مەزن ژدایک بوو و مەزن بوو." },
+                    { title: "٣. شەهیدبوونا باوەرداران", kurdish: "هەردوو پێغەمبەرێن خودێ دژایەتیا کارێن کرێت یێن پاشایێن کافر و زالم کرن، و ل دوماهیێ ژ لایێ وان کافران ڤە هاتنە شەهیدکرن ژبەر راوەستانا وان ل سەر حەقیێ." }
+                ]
+            },
+            {
+                id: 'isa',
+                name: "پێغەمبەر عیسا (س.خ)",
+                stories: [
+                    { title: "١. ژدایکبوونا بێ باب و مریەم", kurdish: "ب قودرەت و موعجیزەیا خودێ، عیسا بێ باب ژ مریەما پاک ژدایک بوو. دەمێ خەلکێ باژێری بێڕێزی ل مریەمێ کری، عیسا هەر د بێشکێ دا ئاخفت و گۆت کو ئەو پێغەمبەرێ خودێ یە." },
+                    { title: "٢. موعجیزە و باوەردار (الحواريون)", kurdish: "عیسا ب ئیرادەیا خودێ مری ساخ دکرن و نەخۆش چارەسەر دکرن. دەمێ بانگەوازی کری، کۆمەکا کێم ژ خەلکی (الحواريون) باوەری پێ ئینا و بوونە هاریکارێن وی د بەلاڤکرنا ئایینێ خودێ دا." },
+                    { title: "٣. پیلانا کافران و بلندکرن", kurdish: "سەرکردەیێن جولەکان یێن کافر ژ وی ترسیان و پیلان دانا کو وی بکوژن. لێ خودایێ مەزن ئەو کافر خاپاندین، کەسەکێ دی ل شوینا وی هاتە کوشتن، و خودێ عیسا ب ساخی بلندکر بۆ ئەسمانی دا کو ل دوماهیا دونیایێ بێتە خوارێ." }
+                ]
+            }
+        ];
+
+        function showHSCategory(category) {
+            document.getElementById('hs-main-menu').style.display = 'none';
+            document.getElementById('hs-content-view').style.display = 'block';
+            
+            const container = document.getElementById('hs-items-container');
+            container.innerHTML = '';
+            
+            if(category === 'hadiths') {
+                currentHSState = 'hadiths';
+                document.getElementById('hs-content-title').innerText = 'فەرموودە';
+                hadithsData.forEach(item => {
+                    container.innerHTML += createHSCard(item.arabic, item.kurdish, item.title);
+                });
+            } else if(category === 'prophets_list') {
+                currentHSState = 'prophets_list';
+                document.getElementById('hs-content-title').innerText = 'ژیانا پێغەمبەران';
+                prophetsData.forEach(p => {
+                    container.innerHTML += `
+                        <button class="neu-card-btn" style="font-size:1.8rem; padding:25px; display:flex; justify-content:space-between; align-items:center;" onclick="showProphetStories('${p.id}')">
+                            <span>${p.name}</span>
+                            <i class="fas fa-chevron-left" style="font-size:1.2rem; color:var(--text-dim);"></i>
+                        </button>
+                    `;
+                });
+            }
+        }
+        
+        function showProphetStories(id) {
+            currentHSState = 'prophet_stories';
+            const prophet = prophetsData.find(p => p.id === id);
+            document.getElementById('hs-content-title').innerText = prophet.name;
+            
+            const container = document.getElementById('hs-items-container');
+            container.innerHTML = '';
+            prophet.stories.forEach(item => {
+                container.innerHTML += createHSCard(null, item.kurdish, item.title);
+            });
+        }
+        
+        function goBackHS() {
+            if(currentHSState === 'hadiths' || currentHSState === 'prophets_list') {
+                currentHSState = 'menu';
+                document.getElementById('hs-content-view').style.display = 'none';
+                document.getElementById('hs-main-menu').style.display = 'block';
+            } else if(currentHSState === 'prophet_stories') {
+                showHSCategory('prophets_list');
+            }
+        }
+        
+        function createHSCard(arabic, kurdish, title) {
+            let arabicHtml = arabic ? `<p style="font-family:'Amiri'; font-size:2.2rem; text-align:center; line-height:2.2; color:var(--text-light); text-shadow:2px 2px 4px #000; margin-bottom:25px;">${arabic}</p>` : '';
+            return `
+                <div class="neu-card">
+                    <div style="background-color:var(--bg-color); border-radius:18px; padding:30px 20px; box-shadow:inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light);">
+                        ${title ? `<h4 style="color:var(--accent); text-align:center; margin-bottom:20px; font-size:1.6rem; border-bottom:1px solid rgba(232, 200, 149, 0.2); padding-bottom:15px; text-shadow: 1px 1px 2px #000;">${title}</h4>` : ''}
+                        ${arabicHtml}
+                        <p style="color:var(--text-dim); text-align:justify; font-size:1.3rem; line-height:2.2;">${kurdish}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Quran Audio & Speed Logic
         let surahList = [], ayahTimings = [], currentAyahIndex = 0;
         let globalAudio = new Audio();
         
-        // Audio Speed Controls
         const playbackSpeeds = [1.0, 1.25, 1.5, 2.0, 0.5, 0.75];
         let currentSpeedIndex = 0;
 
@@ -838,7 +1120,7 @@
             if(el) { el.classList.add('active-ayah'); el.scrollIntoView({behavior: 'smooth', block: 'center'}); }
             
             globalAudio.src = ayahTimings[index];
-            globalAudio.playbackRate = playbackSpeeds[currentSpeedIndex]; // Apply selected speed
+            globalAudio.playbackRate = playbackSpeeds[currentSpeedIndex]; 
             document.getElementById('quran-play-btn').innerHTML = '<i class="fas fa-pause"></i>';
             globalAudio.play().catch(err => console.log("Audio Error:", err));
             
